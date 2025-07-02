@@ -69,8 +69,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white via-blue-100 to-pink-100 text-gray-900 dark:text-white transition-colors">
-      <header className="py-6 text-center font-bold text-3xl bg-white/10 backdrop-blur shadow text-black dark:text-white">
-        💬 AI Chatbot
+      <header className="py-6 text-center font-bold text-3xl bg-white/10 backdrop-blur shadow text-black dark:text-pink">
+       Harshada's AI
       </header>
 
       <main className="flex-grow flex flex-col items-center px-4 pt-6">
@@ -155,9 +155,10 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="text-center text-sm py-4 text-black/60 dark:text-white/60">
-        Built with ❤️ using Next.js + Groq
+      <footer className="text-center text-sm py-4 text-black/60 dark:text-pink/60">
+        Built with ❤️ Harshada
       </footer>
     </div>
   );
 }
+
