@@ -41,18 +41,23 @@ export default function Home() {
       body: JSON.stringify({ messages: updatedMessages }),
     });
 
-    const data = await res.json();
-    const fullText = data.text;
+    try {
+      const data = await res.json();
+      const fullText = data.text;
 
-    for (let i = 0; i <= fullText.length; i++) {
-      setTypingText(fullText.slice(0, i));
-      const currentChar = fullText.charAt(i);
-      const isPunctuation = /[.,?!]/.test(currentChar);
-      const delay = isPunctuation ? 100 : 30;
-      await new Promise((res) => setTimeout(res, delay));
+      for (let i = 0; i <= fullText.length; i++) {
+        setTypingText(fullText.slice(0, i));
+        const currentChar = fullText.charAt(i);
+        const isPunctuation = /[.,?!]/.test(currentChar);
+        const delay = isPunctuation ? 100 : 30;
+        await new Promise((res) => setTimeout(res, delay));
+      }
+
+      setMessages([...updatedMessages, { role: 'assistant', content: fullText }]);
+    } catch (err) {
+      console.error('Failed to parse response:', err);
     }
 
-    setMessages([...updatedMessages, { role: 'assistant', content: fullText }]);
     setTypingText('');
     setLoading(false);
   };
@@ -70,13 +75,24 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white via-blue-100 to-pink-100 text-gray-900 dark:text-white transition-colors">
       <header className="py-6 text-center font-bold text-3xl bg-white/10 backdrop-blur shadow text-black dark:text-pink">
-       Harshada's AI
+        Harshada's AI
       </header>
 
       <main className="flex-grow flex flex-col items-center px-4 pt-6">
         <div className="w-full max-w-2xl h-[70vh] overflow-y-auto bg-white/90 dark:bg-gray-900 border border-white/30 backdrop-blur rounded-lg p-4 space-y-4 shadow-inner">
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div
+              key={i}
+              className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} items-start gap-2`}
+            >
+              {m.role === 'assistant' && (
+                <img
+                  src="/harshada-avatar.jpg" // Put your image in /public
+                  alt="Assistant"
+                  className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600"
+                />
+              )}
+
               <div
                 className={`max-w-[75%] px-4 py-2 rounded-xl text-sm shadow whitespace-pre-wrap transition-opacity duration-300 ${
                   m.role === 'user'
@@ -123,11 +139,22 @@ export default function Home() {
                   {m.content}
                 </ReactMarkdown>
               </div>
+
+              {m.role === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-sm">
+                  U
+                </div>
+              )}
             </div>
           ))}
 
           {typingText && (
-            <div className="flex justify-start">
+            <div className="flex justify-start items-start gap-2">
+              <img
+                src="/harshada-avatar.jpg"
+                alt="Assistant"
+                className="w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600"
+              />
               <div className="max-w-[75%] px-4 py-2 rounded-xl text-sm shadow whitespace-pre-wrap italic bg-white dark:bg-gray-800 text-black dark:text-white animate-pulse">
                 <ReactMarkdown>{typingText}</ReactMarkdown>
               </div>
@@ -161,4 +188,3 @@ export default function Home() {
     </div>
   );
 }
-
